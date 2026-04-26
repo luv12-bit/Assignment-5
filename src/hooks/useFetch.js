@@ -1,39 +1,44 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
-/**
- * A custom hook to fetch data from a given URL.
- * 
- * @param {string} url - The URL to fetch data from.
- * @returns {object} - An object containing { data, loading, error }.
- */
+// I'm creating this custom hook to handle API calls in one place
+// This way, I don't have to rewrite the same fetch logic in every component
 const useFetch = (url) => {
+  // We need state to keep track of the data, if it's still loading, and any errors
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const result = await response.json();
-      setData(result);
-    } catch (err) {
-      setError(err.message || 'Something went wrong');
-    } finally {
-      setLoading(false);
-    }
-  }, [url]);
-
+  // useEffect is perfect for side effects like fetching data
+  // It runs after the component renders
   useEffect(() => {
-    if (url) {
-      fetchData();
-    }
-  }, [url, fetchData]);
+    // console.log("Fetching from:", url); // Debugging to see when it triggers
+    
+    const fetchData = async () => {
+      setLoading(true); // Reset loading state when url changes
+      try {
+        const response = await fetch(url);
+        
+        // I learned that fetch doesn't throw on 404/500, so I need to check response.ok
+        if (!response.ok) {
+          throw new Error("Could not fetch the data for that resource");
+        }
+        
+        const result = await response.json();
+        // console.log("Data received:", result); // Debugging to see if data is what I expect
+        setData(result);
+        setError(null);
+      } catch (err) {
+        // console.log("Fetch Error:", err.message);
+        setError(err.message);
+      } finally {
+        setLoading(false); // Done loading regardless of success or failure
+      }
+    };
 
+    fetchData();
+  }, [url]); // This runs whenever the 'url' variable changes
+
+  // Return the things the component will actually use
   return { data, loading, error };
 };
 

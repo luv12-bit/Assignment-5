@@ -1,16 +1,29 @@
-# React + Vite
+# My Custom Hook Assignment: useFetch
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is my project for Assignment 5, where I learned how to create a custom React hook to simplify data fetching.
 
-Currently, two official plugins are available:
+## What is this project?
+In this project, I built a custom hook called `useFetch` that handles the repetitive logic of fetching data from an API. Instead of writing `fetch`, `useState`, and `useEffect` in every component that needs data, I can just use my hook.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## The useFetch Hook
+Custom hooks are really useful because they let you "extract" component logic into reusable functions. 
 
-## React Compiler
+In my `useFetch` hook:
+- I used `useState` to keep track of the `data`, `loading` state, and any `error` messages.
+- I used `useEffect` to trigger the fetch whenever the URL changes.
+- I learned how to handle errors using `try...catch` and checking `response.ok`.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Setup Instructions
+To run this project locally, follow these steps:
 
-## Expanding the ESLint configuration
+1. Clone the repository or download the files.
+2. Open your terminal in the project folder.
+3. Run `npm install` to install the dependencies.
+4. Run `npm run dev` to start the development server.
+5. Open the link shown in the terminal (usually `http://localhost:5173`).
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## API Choice
+I used the **Platzi Fake Store API** (`https://api.escuelajs.co/api/v1/products`) because it provides real-looking product data with images, which made it easier to test if my grid was working correctly.
+
+## Learning Process
+While building this, I initially struggled with the `useEffect` dependency array, but I realized that putting the `url` in there ensures that if I ever want to fetch from a different endpoint, the hook will automatically update. I also added some `console.log` statements in the hook code to see exactly when the data comes back from the server.

@@ -2,45 +2,35 @@ import React from 'react';
 import useFetch from '../hooks/useFetch';
 
 const PhotoGrid = () => {
+  // Using my custom hook to get products from the API
   const { data: products, loading, error } = useFetch('https://api.escuelajs.co/api/v1/products');
 
+  // Simple loading state
   if (loading) {
-    return (
-      <div className="status-container">
-        <div className="loader"></div>
-        <p>Loading premium content...</p>
-      </div>
-    );
+    return <div className="message">Loading products... Please wait.</div>;
   }
 
+  // Simple error state
   if (error) {
-    return (
-      <div className="status-container error">
-        <p>Error: {error}</p>
-      </div>
-    );
+    return <div className="message error">Error: {error}</div>;
   }
 
   return (
-    <div className="container">
-      <h1 className="title">Premium Products</h1>
-      <div className="grid">
-        {products && products.slice(0, 12).map((product) => (
-          <div key={product.id} className="card">
-            <div className="image-container">
-              <img 
-                src={product.images[0]?.replace(/[\[\]"]/g, '') || 'https://via.placeholder.com/600'} 
-                alt={product.title} 
-                className="product-image"
-                onError={(e) => { e.target.src = 'https://via.placeholder.com/600'; }}
-              />
-              <div className="overlay">
-                <span>View Details</span>
-              </div>
-            </div>
-            <div className="info">
-              <h3>{product.title}</h3>
-              <p className="price">${product.price}</p>
+    <div className="grid-wrapper">
+      <h1>My Product Collection</h1>
+      <div className="photo-grid">
+        {/* I'm limiting to 12 items so the page isn't too long */}
+        {products && products.slice(0, 12).map((item) => (
+          <div key={item.id} className="photo-card">
+            <img 
+              src={item.images[0]} 
+              alt={item.title} 
+              // Simple fallback if image fails to load
+              onError={(e) => { e.target.src = "https://via.placeholder.com/150"; }} 
+            />
+            <div className="card-info">
+              <h3>{item.title}</h3>
+              <p>Price: ${item.price}</p>
             </div>
           </div>
         ))}
